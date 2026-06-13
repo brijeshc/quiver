@@ -1,7 +1,7 @@
 ---
 name: design-scholarly
 description: Scholarly/editorial design language — the authority of a well-set academic journal or university press book, on the web. Use for research sites, documentation, essays, publications, archives, legal/medical content, or any product that must feel credible and serious.
-argument-hint: [what to design]
+argument-hint: "[what to design]"
 ---
 
 # Design: Scholarly

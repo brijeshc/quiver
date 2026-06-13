@@ -19,6 +19,7 @@ Everything after the skill name is the skill's input:
 /readable src/billing/
 /perf the /search endpoint p95
 /design-mood trustworthy   the onboarding flow for the loans app
+/design-scene wedding      the RSVP microsite
 /ship pr
 ```
 
@@ -96,6 +97,7 @@ Four reports, four severity-ranked lists — triage from there.
 | High-end commerce, hospitality, premium tier | `/design-luxe` |
 | Consumer app, education, community, games | `/design-playful` |
 | The brief is a *feeling*, not a style | `/design-mood <emotion>` |
+| The brief is a *moment* — weather, season, occasion | `/design-scene <scene>` |
 
 ### Mood-first design
 ```text
@@ -104,6 +106,19 @@ Four reports, four severity-ranked lists — triage from there.
 /design-mood cozy        the recipe collection page
 ```
 Ten moods ship with full recipes (palette, type, shape, pace, texture, copy voice, litmus test): calm, energetic, trustworthy, nostalgic, futuristic, organic, somber, urgent, dreamy, cozy. Blends work with a stated dominant: `/design-mood trustworthy with a cozy accent — family budgeting app`.
+
+### Scene-first design
+
+When the brief is a moment everyone has lived rather than an abstract feeling:
+
+```text
+/design-scene rainy        the focus-timer app
+/design-scene sunrise      the habit tracker's onboarding
+/design-scene wedding      the save-the-date site
+/design-scene interview    my portfolio
+```
+
+Ten scenes ship with full recipes in the same format: sunrise, sunset, sunny, rainy, winter, midnight, festival, wedding, interview, thesis. Unlisted scenes (monsoon, autumn, graduation, campfire…) are derived on the spot from four questions — what's the light, what's in the air, what's the soundtrack, what's at stake. Scenes take a mood accent: `/design-scene rainy with a trustworthy accent — focused-work app that handles money`.
 
 ### Full design workflow
 ```text

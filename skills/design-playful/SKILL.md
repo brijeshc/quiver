@@ -1,7 +1,7 @@
 ---
 name: design-playful
 description: Playful, joyful design — chunky shapes, springy motion, and warmth that makes people smile without becoming childish or unusable. Use for consumer apps, games, education, communities, kids' products, or any brand whose personality is fun.
-argument-hint: [what to design]
+argument-hint: "[what to design]"
 ---
 
 # Design: Playful

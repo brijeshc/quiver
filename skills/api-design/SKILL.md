@@ -1,7 +1,7 @@
 ---
 name: api-design
 description: Design clear, consistent, evolvable APIs — REST endpoints, library interfaces, CLI commands, or internal module boundaries. Use when adding endpoints, designing a public interface, or when an existing API has grown inconsistent.
-argument-hint: [the API or surface to design/review]
+argument-hint: "[the API or surface to design/review]"
 ---
 
 # API Design

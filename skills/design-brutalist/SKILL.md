@@ -1,7 +1,7 @@
 ---
 name: design-brutalist
 description: Brutalist/raw web design — exposed structure, hard borders, stark contrast, zero decoration pretending otherwise. Use for dev tools, indie products, zines, portfolios, and brands that want anti-corporate honesty with craft underneath.
-argument-hint: [what to design]
+argument-hint: "[what to design]"
 ---
 
 # Design: Brutalist

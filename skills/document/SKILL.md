@@ -1,7 +1,7 @@
 ---
 name: document
 description: Write documentation people actually read — READMEs, API docs, docstrings, architecture decision records, and onboarding guides. Use when a project needs docs, a README is stale, an API is undocumented, or a decision needs recording.
-argument-hint: [what to document: readme | api | docstrings | adr | onboarding]
+argument-hint: "[what to document: readme | api | docstrings | adr | onboarding]"
 ---
 
 # Document

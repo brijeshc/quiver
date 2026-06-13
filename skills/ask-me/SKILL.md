@@ -1,7 +1,7 @@
 ---
 name: ask-me
 description: Interview the developer before building anything. Extracts goals, constraints, edge cases, and success criteria through focused questions, then writes a spec both sides agree on. Use before starting a new feature, project, or any ambiguous request.
-argument-hint: [what you want to build]
+argument-hint: "[what you want to build]"
 disable-model-invocation: true
 ---
 

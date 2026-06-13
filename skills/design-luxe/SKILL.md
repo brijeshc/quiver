@@ -1,7 +1,7 @@
 ---
 name: design-luxe
 description: Luxury/premium design — restraint, slowness, and typographic refinement that signal expense without saying it. Use for high-end products, hospitality, jewelry, fashion, premium SaaS tiers, agencies, anything that must feel exclusive and considered.
-argument-hint: [what to design]
+argument-hint: "[what to design]"
 ---
 
 # Design: Luxe

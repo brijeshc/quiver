@@ -1,7 +1,7 @@
 ---
 name: design-dna
 description: Foundation for all UI design work — kills the generic AI look and derives a distinct visual identity (type, color, spacing, motion) before any pixels are placed. Use when designing or restyling any interface, and alongside the design-* style skills.
-argument-hint: [the product/page and its audience]
+argument-hint: "[the product/page and its audience]"
 ---
 
 # Design DNA — the anti-generic foundation

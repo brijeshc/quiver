@@ -1,7 +1,7 @@
 ---
 name: ship
 description: Package the current work into clean, atomic commits with honest messages, and optionally a pull request with a reviewable description. Use when work is done and ready to commit, or to turn a messy working tree into a presentable history.
-argument-hint: [optional: "pr" to also open a pull request]
+argument-hint: "[optional: \"pr\" to also open a pull request]"
 disable-model-invocation: true
 allowed-tools: Bash(git status *) Bash(git diff *) Bash(git log *) Bash(git add *) Bash(git branch *)
 ---

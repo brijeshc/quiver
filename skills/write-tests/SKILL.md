@@ -1,7 +1,7 @@
 ---
 name: write-tests
 description: Write tests that catch real bugs — behavior-focused, edge-case-heavy, and resistant to refactoring. Use when adding tests to untested code, testing a new feature, reproducing a bug, or when coverage is hollow.
-argument-hint: [files, feature, or bug to test]
+argument-hint: "[files, feature, or bug to test]"
 ---
 
 # Write Tests

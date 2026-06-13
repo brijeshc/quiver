@@ -1,7 +1,7 @@
 ---
 name: design-minimal
 description: True minimalist design — radical reduction where whitespace, one typeface, and precision carry everything. Not "clean default", but disciplined subtraction. Use for portfolios, premium tools, focused products, landing pages that must feel confident and quiet.
-argument-hint: [what to design]
+argument-hint: "[what to design]"
 ---
 
 # Design: Minimal

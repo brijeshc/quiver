@@ -1,7 +1,7 @@
 ---
 name: perf
 description: Find and fix real performance problems with measurements, not guesses. Profiles first, optimizes the proven bottleneck, verifies the gain. Use when something is slow, uses too much memory, or needs to handle more load — pages, APIs, queries, builds, or scripts.
-argument-hint: [what is slow]
+argument-hint: "[what is slow]"
 ---
 
 # Perf — measure, fix, prove

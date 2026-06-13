@@ -1,7 +1,7 @@
 ---
 name: refactor
 description: Behavior-preserving restructuring in small, verified steps. Untangles code safely with tests as a net — never a rewrite. Use when code needs restructuring before a feature, when duplication hurts, or when a module has become unworkable.
-argument-hint: [files or area to refactor]
+argument-hint: "[files or area to refactor]"
 ---
 
 # Refactor — change structure, never behavior

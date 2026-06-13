@@ -1,7 +1,7 @@
 ---
 name: deep-review
 description: Thorough code review of a diff, branch, PR, or file. Hunts real bugs (logic, concurrency, edge cases, error handling, security) and reports with severity and evidence, never style nitpicks. Use when asked to review code, check a PR, or audit changes before merge.
-argument-hint: [diff | branch | PR number | file paths]
+argument-hint: "[diff | branch | PR number | file paths]"
 ---
 
 # Deep Review

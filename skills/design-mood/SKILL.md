@@ -1,7 +1,7 @@
 ---
 name: design-mood
 description: Design an interface around a target emotion — calm, energetic, trustworthy, nostalgic, futuristic, organic, somber, urgent, dreamy, or cozy. Translates a feeling into a complete, concrete design system. Use when the brief is a mood ("make it feel calm/exciting/safe") rather than a named style.
-argument-hint: [mood] [what to design]
+argument-hint: "[mood] [what to design]"
 ---
 
 # Design: Mood
@@ -35,5 +35,7 @@ A mood fails when ONE lever contradicts the others (springy bounce in a "calm" d
 **calm** · **energetic** · **trustworthy** · **nostalgic** · **futuristic** · **organic** · **somber** · **urgent** · **dreamy** · **cozy** — full recipes in [moods.md](moods.md).
 
 If the requested emotion isn't listed (e.g. "rebellious", "mysterious"), derive a recipe yourself using the six-lever table, write it out as a contract in the same format, and proceed — the listed moods show the expected depth.
+
+If the brief is a concrete **scene or occasion** rather than an emotion — sunrise, rainy, wedding, interview — use `design-scene` instead: same levers, set from a lived moment instead of a feeling.
 
 Blends are allowed but ordered: pick a dominant mood (the structure) and a secondary (an accent flavor), e.g. *trustworthy with a warm/cozy accent* for a family-finance app. Never blend opposites equally — calm-urgent is no mood at all.

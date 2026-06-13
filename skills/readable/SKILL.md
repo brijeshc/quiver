@@ -1,7 +1,7 @@
 ---
 name: readable
 description: Make code readable for humans. Improves naming, structure, function shape, and comment quality so the next developer understands the code on first read, without changing behavior. Use when code works but is hard to follow, after AI-generated code, or before handing code to a team.
-argument-hint: [files or directory]
+argument-hint: "[files or directory]"
 ---
 
 # Readable — human-readability pass

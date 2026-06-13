@@ -1,7 +1,7 @@
 ---
 name: design-expressive
 description: Creative, art-directed design — editorial-poster energy, oversized type, deliberate grid breaks, and one unforgettable moment per page. Use for portfolios, campaign/launch pages, agencies, events, brands that must be memorable rather than safe.
-argument-hint: [what to design]
+argument-hint: "[what to design]"
 ---
 
 # Design: Expressive

@@ -2,7 +2,7 @@
 
 **A curated quiver of skills for Claude Code. Every arrow has a purpose.**
 
-Quiver is a set of 20 sharply-scoped skills that make Claude Code interview like a senior engineer, review like a skeptic, debug like a scientist, and design like it has taste. No overlap, no filler, no "AI slop" output — each skill states exactly what it does, when it fires, and what you get back.
+Quiver is a set of 21 sharply-scoped skills that make Claude Code interview like a senior engineer, review like a skeptic, debug like a scientist, and design like it has taste. No overlap, no filler, no "AI slop" output — each skill states exactly what it does, when it fires, and what you get back.
 
 ```text
 You:    /ask-me a billing export feature
@@ -76,6 +76,7 @@ AI-designed pages converge on the same look: Inter, purple gradient, three round
 | [`/design-luxe`](skills/design-luxe/SKILL.md) | Premium restraint: slowness, letterspaced caps, withheld color | A flagship boutique at midnight |
 | [`/design-playful`](skills/design-playful/SKILL.md) | Crafted joy: sticker shadows, springy motion, warm voice | Great toy design |
 | [`/design-mood <emotion>`](skills/design-mood/SKILL.md) | Emotion → full design system: **calm, energetic, trustworthy, nostalgic, futuristic, organic, somber, urgent, dreamy, cozy** | 10 complete recipes in [moods.md](skills/design-mood/moods.md) |
+| [`/design-scene <scene>`](skills/design-scene/SKILL.md) | Lived moment → full design system: **sunrise, sunset, sunny, rainy, winter, midnight, festival, wedding, interview, thesis** | 10 complete recipes in [scenes.md](skills/design-scene/scenes.md) |
 
 ## How skills work (30-second primer)
 

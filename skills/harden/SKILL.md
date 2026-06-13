@@ -1,7 +1,7 @@
 ---
 name: harden
 description: Defensive security audit of code or changes. Finds injection, broken auth, secrets exposure, unsafe deserialization, and trust-boundary mistakes; fixes with proven patterns. Use before exposing endpoints, handling user input, touching auth, or shipping to production.
-argument-hint: [files, endpoints, or diff to audit]
+argument-hint: "[files, endpoints, or diff to audit]"
 ---
 
 # Harden — security pass

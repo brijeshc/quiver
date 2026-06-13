@@ -1,7 +1,7 @@
 ---
 name: a11y
 description: Accessibility audit and fixes for web UIs — keyboard navigation, screen readers, contrast, focus management, forms, and motion safety, targeting WCAG 2.2 AA. Use when building or reviewing any user-facing interface, or when accessibility compliance is required.
-argument-hint: [pages, components, or files to audit]
+argument-hint: "[pages, components, or files to audit]"
 ---
 
 # A11y — accessibility pass

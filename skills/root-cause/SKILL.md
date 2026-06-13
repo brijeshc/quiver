@@ -1,7 +1,7 @@
 ---
 name: root-cause
 description: Systematic debugging that finds the actual cause instead of patching symptoms. Reproduce, isolate, prove, then fix. Use when something is broken, failing intermittently, "works on my machine", or a previous fix didn't stick.
-argument-hint: [the bug or error]
+argument-hint: "[the bug or error]"
 ---
 
 # Root Cause — debug like a scientist
