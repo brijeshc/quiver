@@ -5,8 +5,8 @@
   "author": {
     "name": "Brijesh Chandrakar"
   },
-  "homepage": "https://github.com/brijeshchandrakar/quiver",
-  "repository": "https://github.com/brijeshchandrakar/quiver",
+  "homepage": "https://github.com/brijeshc/quiver",
+  "repository": "https://github.com/brijeshc/quiver",
   "license": "MIT",
   "keywords": ["skills", "code-review", "design", "performance", "readability", "testing"]
 }

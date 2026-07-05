@@ -1,0 +1,39 @@
+{
+  "name": "@brijeshc2049/quiver",
+  "version": "2.0.0",
+  "description": "A curated quiver of composable skills for Claude Code: interviews, audits (security, design, UX, a11y), deep review, debugging, testing, perf, plain-language explanations, and a full anti-generic design suite. Installs skill folders into your Claude Code skills directory.",
+  "bin": {
+    "quiver": "bin/quiver.js"
+  },
+  "files": [
+    "bin/",
+    "skills/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=16.7.0"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "skills",
+    "code-review",
+    "design",
+    "performance",
+    "readability",
+    "testing",
+    "cli"
+  ],
+  "author": "Brijesh Chandrakar",
+  "license": "MIT",
+  "homepage": "https://github.com/brijeshc/quiver#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brijeshc/quiver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brijeshc/quiver/issues"
+  }
+}

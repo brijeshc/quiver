@@ -1,19 +1,99 @@
 # Installing Quiver
 
-Three ways to install, depending on how you want to use it. If unsure, use **Method 1**.
+Four ways to install, depending on how you want to use it. If unsure, use **Method 1 (npm)**.
 
 | Method | Skill names | Scope | Updates | Best for |
 |---|---|---|---|---|
-| 1. Personal copy | `/ask-me` | All your projects | `git pull` + re-copy | Individuals |
-| 2. Project copy | `/ask-me` | One project (and teammates via git) | committed with the repo | Teams standardizing a repo |
-| 3. Plugin marketplace | `/quiver:ask-me` | Wherever enabled | `/plugin marketplace update` | Distribution, versioned updates |
+| 1. npm CLI | `/ask-me` | All your projects (or one, with `--project`) | re-run `npx @brijeshc2049/quiver install` | Most people - one cross-platform command |
+| 2. Plugin marketplace | `/quiver:ask-me` | Wherever enabled | `/plugin marketplace update` | Native, versioned, zero file copying |
+| 3. Personal copy | `/ask-me` | All your projects | `git pull` + re-copy | Editing skills locally |
+| 4. Project copy | `/ask-me` | One project (and teammates via git) | committed with the repo | Teams standardizing a repo |
 
 > **Prerequisite:** Claude Code installed and authenticated ([official quickstart](https://code.claude.com/docs/en/quickstart)).
 > Skills work in the CLI, the desktop app, and the IDE extensions.
 
 ---
 
-## Method 1 - Personal install (recommended)
+## Method 1 - npm CLI (recommended)
+
+One cross-platform command, no `git clone`, no OS-specific copy syntax.
+Requires Node.js 16.7+.
+
+```bash
+npx @brijeshc2049/quiver install            # all skills -> ~/.claude/skills
+npx @brijeshc2049/quiver install --project  # all skills -> ./.claude/skills (commit with your repo)
+```
+
+The CLI copies skill folders into your Claude Code skills directory (Claude Code reads skills from there, not from `node_modules`).
+
+**Only want some skills?** Name them; required cores are pulled in automatically, so you never end up with a wrapper missing its core:
+
+```bash
+npx @brijeshc2049/quiver install ask-me design-mood deep-review
+# -> also installs: interviewing (for ask-me), design-dna (for design-mood)
+```
+
+Useful flags:
+
+| Flag | Effect |
+|---|---|
+| `--project`, `-p` | Install into `./.claude/skills` instead of `~/.claude/skills` |
+| `--dir <path>` | Install into an explicit directory |
+| `--dry-run`, `-n` | Show what would be copied, change nothing |
+| `list` | `npx @brijeshc2049/quiver list` - print all skills (cores marked `*`) |
+
+### Update
+
+Re-run the same command; existing skill folders are replaced with the current version.
+
+```bash
+npx @brijeshc2049/quiver@latest install
+```
+
+### Uninstall
+
+Delete the skill folders from `~/.claude/skills/` (each Quiver skill is one folder). There is nothing else to remove - `npx` leaves no global install behind.
+
+---
+
+## Method 2 - Plugin install (marketplace)
+
+Installs Quiver as a versioned plugin - **native to Claude Code, with no file copying at all**.
+Skills are namespaced (`/quiver:ask-me`), which prevents any name collisions and gives you clean updates.
+
+Inside Claude Code:
+
+```text
+/plugin marketplace add brijeshc/quiver
+/plugin install quiver@quiver
+```
+
+Then restart or run `/reload-plugins`.
+Invoke skills as `/quiver:ask-me`, `/quiver:design-mood calm`, etc.
+
+### Update
+
+```text
+/plugin marketplace update quiver
+```
+
+### Uninstall
+
+```text
+/plugin uninstall quiver
+```
+
+### Try it without installing
+
+From a local clone, load the plugin for one session:
+
+```bash
+claude --plugin-dir ./quiver
+```
+
+---
+
+## Method 3 - Personal copy (edit skills locally)
 
 Copies skill folders into your personal skills directory.
 Available in every project, short names, fully editable.
@@ -21,7 +101,7 @@ Available in every project, short names, fully editable.
 **macOS / Linux / Git Bash on Windows:**
 
 ```bash
-git clone https://github.com/brijeshchandrakar/quiver.git
+git clone https://github.com/brijeshc/quiver.git
 mkdir -p ~/.claude/skills
 cp -r quiver/skills/* ~/.claude/skills/
 ```
@@ -29,7 +109,7 @@ cp -r quiver/skills/* ~/.claude/skills/
 **Windows PowerShell:**
 
 ```powershell
-git clone https://github.com/brijeshchandrakar/quiver.git
+git clone https://github.com/brijeshc/quiver.git
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
 Copy-Item -Recurse quiver/skills/* "$env:USERPROFILE\.claude\skills\"
 ```
@@ -72,9 +152,10 @@ Delete the skill folders from `~/.claude/skills/` (each Quiver skill is one fold
 
 ---
 
-## Method 2 - Project install (share with your team)
+## Method 4 - Project copy (share with your team)
 
-Same as Method 1, but into the project's `.claude/skills/` directory, committed to version control.
+Same as Method 3, but into the project's `.claude/skills/` directory, committed to version control.
+(Or just use `npx @brijeshc2049/quiver install --project` from Method 1, which does the copy for you.)
 Everyone who clones the repo gets the skills.
 
 ```bash
@@ -91,49 +172,12 @@ Notes:
 
 ---
 
-## Method 3 - Plugin install (marketplace)
-
-Installs Quiver as a versioned plugin.
-Skills are namespaced (`/quiver:ask-me`), which prevents any name collisions and gives you clean updates.
-
-Inside Claude Code:
-
-```text
-/plugin marketplace add brijeshchandrakar/quiver
-/plugin install quiver@quiver
-```
-
-Then restart or run `/reload-plugins`.
-Invoke skills as `/quiver:ask-me`, `/quiver:design-mood calm`, etc.
-
-### Update
-
-```text
-/plugin marketplace update quiver
-```
-
-### Uninstall
-
-```text
-/plugin uninstall quiver
-```
-
-### Try it without installing
-
-From a local clone, load the plugin for one session:
-
-```bash
-claude --plugin-dir ./quiver
-```
-
----
-
 ## Troubleshooting
 
 **Skills don't appear in the `/` menu.**
-- Method 1/2: confirm the layout is `skills-dir/<skill-name>/SKILL.md` - e.g. `~/.claude/skills/ask-me/SKILL.md`. A nested `~/.claude/skills/skills/ask-me/` (double `skills`) is the most common copy mistake.
+- Copy-based installs (Methods 1, 3, 4): confirm the layout is `skills-dir/<skill-name>/SKILL.md` - e.g. `~/.claude/skills/ask-me/SKILL.md`. A nested `~/.claude/skills/skills/ask-me/` (double `skills`) is the most common manual-copy mistake.
 - If the top-level skills directory was created fresh, restart Claude Code once.
-- Method 3: run `/reload-plugins`, and remember the namespace - type `/quiver:` to see them.
+- Plugin (Method 2): run `/reload-plugins`, and remember the namespace - type `/quiver:` to see them.
 
 **A wrapper complains its core is missing.**
 `ask-me`/`design-discussion` invoke `interviewing`; the `*-audit` skills invoke `auditing`.

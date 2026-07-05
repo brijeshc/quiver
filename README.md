@@ -27,22 +27,25 @@ Quiver fixes all three:
 
 ## Install in 60 seconds
 
-**Personal install** (skills available in all your projects):
+**Option A - npm (one cross-platform command):**
 
 ```bash
-# macOS / Linux / Git Bash
-git clone https://github.com/brijeshchandrakar/quiver.git
-cp -r quiver/skills/* ~/.claude/skills/
+npx @brijeshc2049/quiver install          # all skills -> ~/.claude/skills
+npx @brijeshc2049/quiver install --project # -> ./.claude/skills (share with your team)
+npx @brijeshc2049/quiver install ask-me deep-review   # just a few; required cores are pulled in
 ```
 
-```powershell
-# Windows PowerShell
-git clone https://github.com/brijeshchandrakar/quiver.git
-Copy-Item -Recurse quiver/skills/* "$env:USERPROFILE\.claude\skills\"
+**Option B - plugin marketplace (native, versioned, no file copying):**
+
+```text
+/plugin marketplace add brijeshc/quiver
+/plugin install quiver@quiver
 ```
+
+Skills are namespaced as `/quiver:ask-me` and update with `/plugin marketplace update quiver`.
 
 Start (or restart) Claude Code, type `/`, and you'll see the skills.
-Project-only install or the plugin/marketplace route: see **[docs/INSTALL.md](docs/INSTALL.md)**.
+Manual `git clone` + copy, subset rules, and troubleshooting: see **[docs/INSTALL.md](docs/INSTALL.md)**.
 
 ## The architecture: cores + wrappers
 
