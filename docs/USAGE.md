@@ -1,13 +1,16 @@
 # Using Quiver
 
 How to pick the right arrow, pass arguments, and chain skills into real workflows.
+Genuinely unsure which arrow? Ask the quiver itself: `/which-arrow migrate our cron jobs to a queue`.
 
 ## The two ways a skill fires
 
-1. **You type it:** `/perf the dashboard load` — explicit, immediate, takes arguments.
+1. **You type it:** `/perf the dashboard load` - explicit, immediate, takes arguments.
 2. **Claude picks it up:** you say *"users complain the dashboard takes forever"* and Claude loads `perf` because the request matches its description.
 
-Both are fine. Type the slash command when you want a specific procedure; talk normally when you want Claude to choose. Exception: `/ask-me` and `/ship` only fire when **you** type them — interviews and commits happen on your schedule, never Claude's.
+Both are fine.
+Type the slash command when you want a specific procedure; talk normally when you want Claude to choose.
+Exception: `/ask-me`, `/design-discussion`, `/ship`, `/handoff`, `/to-issues`, and `/to-prd` only fire when **you** type them - interviews, commits, and published artifacts happen on your schedule, never Claude's.
 
 ## Arguments
 
@@ -15,36 +18,45 @@ Everything after the skill name is the skill's input:
 
 ```text
 /ask-me a CSV import feature for the admin panel
+/design-discussion event sourcing vs CRUD for orders
 /deep-review PR 142
-/readable src/billing/
-/perf the /search endpoint p95
+/security-audit src/api/
+/simply-explained the auth middleware, for a new hire
 /design-mood trustworthy   the onboarding flow for the loans app
-/design-scene wedding      the RSVP microsite
 /ship pr
 ```
 
-No argument? Each skill has a sensible default — review skills target the current diff, design skills ask what you're building.
+No argument? Each skill has a sensible default - review and audit skills target the current diff or codebase, design skills ask what you're building.
 
 ## Which skill? (decision table)
 
 | Situation | Draw |
 |---|---|
 | "I want to build…" (anything fuzzy) | `/ask-me` first. Always. The spec pays for itself in the first avoided rewrite |
-| Code is written, about to merge | `/deep-review` (bugs) → `/readable` (humans) — in that order: no point polishing code that's wrong |
-| "It's broken / flaky / works on my machine" | `/root-cause` — it refuses to patch symptoms |
-| "It's slow" | `/perf` — it refuses to optimize without measuring |
+| "Should we use X or Y?" (architecture) | `/design-discussion` - sparring + an ADR per decision |
+| Code is written, about to merge | `/deep-review` (bugs) → `/readable` (humans) - in that order |
+| "It's broken / flaky / works on my machine" | `/root-cause` - it refuses to patch symptoms |
+| "It's slow" | `/perf` - it refuses to optimize without measuring |
 | "It works but nobody can follow it" | `/readable` (in place) or `/refactor` (structure must change) |
-| Touching auth, input handling, or going public | `/harden`, and `/a11y` if there's a UI |
+| "What should we improve structurally?" | `/design-audit` - findings ranked by leverage |
+| Touching auth, input handling, going public | `/security-audit`, and `/a11y-audit` if there's a UI |
+| "Users say it's confusing" | `/ux-audit` - flow walk, friction moments |
+| "Explain this to me / to a PM" | `/simply-explained` - analogy + mermaid + export |
 | Interface others will call (API/lib/CLI) | `/api-design` before implementing |
 | Tests are missing or assert nothing | `/write-tests` |
 | Done, tree is messy, need commits/PR | `/ship` / `/ship pr` |
 | Docs missing, stale, or unread | `/document readme` (or `api`, `docstrings`, `adr`) |
+| Spec agreed, needs tracker issues | `/to-issues` |
+| Long discussion needs to become a document | `/to-prd` |
+| Context is long, parking the work | `/handoff` |
 
 ## Workflow recipes
 
 ### Feature, end to end
 ```text
 /ask-me notifications digest email     → interview → SPEC.md agreed
+/design-discussion delivery mechanism  → ADRs for the contested choices
+/to-issues                             → vertical slices, picked from the top
   build it (plan mode for anything non-trivial)
 /write-tests                           → behavior coverage, run green
 /deep-review                           → fix findings
@@ -61,6 +73,7 @@ No argument? Each skill has a sensible default — review skills target the curr
 
 ### Legacy rescue (the order matters)
 ```text
+/design-audit src/legacy/              → the 3 moves that unlock the most
 /write-tests src/legacy/pricing.js     → characterization net first
 /readable src/legacy/pricing.js        → safe renames & structure
 /refactor extract pricing rules        → behavior-preserving steps
@@ -69,22 +82,32 @@ No argument? Each skill has a sensible default — review skills target the curr
 
 ### Pre-launch audit
 ```text
-/deep-review        → correctness
-/harden             → security walk of every input path
-/a11y               → keyboard walk + contrast, computed
+/deep-review        → correctness of the release diff
+/security-audit     → untrusted-data walk of every input path
+/a11y-audit         → keyboard walk + contrast, computed
+/ux-audit           → first-time-user walk of the core flows
 /perf               → measured against a stated budget
 ```
-Four reports, four severity-ranked lists — triage from there.
+Five reports, severity-ranked - triage from there.
+
+### Onboarding someone (or yourself, later)
+```text
+/simply-explained the billing pipeline, for a new hire
+  → analogy + diagram + walkthrough → docs/explanations/billing-pipeline.md
+/handoff
+  → HANDOFF.md: state, decisions, gotchas, next steps
+```
 
 ## Design suite recipes
 
-### Any UI work — start with the foundation
+### Any UI work - start with the foundation
 ```text
 /design-dna a study-planner app for med students
-  → three adjectives chosen, reference world, type/color/space/motion contract
+  → three adjectives, reference world, type/color/space/motion contract
   → THEN build screens against that contract
 ```
-`design-dna` alone already kills the generic look. The style skills layer a specific register on top.
+`design-dna` alone already kills the generic look.
+The style skills layer a specific register on top.
 
 ### Choosing a register
 
@@ -97,34 +120,24 @@ Four reports, four severity-ranked lists — triage from there.
 | High-end commerce, hospitality, premium tier | `/design-luxe` |
 | Consumer app, education, community, games | `/design-playful` |
 | The brief is a *feeling*, not a style | `/design-mood <emotion>` |
-| The brief is a *moment* — weather, season, occasion | `/design-scene <scene>` |
+| The brief is a *moment* - weather, season, occasion | `/design-scene <scene>` |
 
-### Mood-first design
+### Mood-first and scene-first design
 ```text
-/design-mood calm        the meditation app home screen
-/design-mood urgent      the incident dashboard
-/design-mood cozy        the recipe collection page
+/design-mood calm         the meditation app home screen
+/design-mood urgent       the incident dashboard
+/design-scene rainy       the focus-timer app
+/design-scene wedding     the save-the-date site
 ```
-Ten moods ship with full recipes (palette, type, shape, pace, texture, copy voice, litmus test): calm, energetic, trustworthy, nostalgic, futuristic, organic, somber, urgent, dreamy, cozy. Blends work with a stated dominant: `/design-mood trustworthy with a cozy accent — family budgeting app`.
-
-### Scene-first design
-
-When the brief is a moment everyone has lived rather than an abstract feeling:
-
-```text
-/design-scene rainy        the focus-timer app
-/design-scene sunrise      the habit tracker's onboarding
-/design-scene wedding      the save-the-date site
-/design-scene interview    my portfolio
-```
-
-Ten scenes ship with full recipes in the same format: sunrise, sunset, sunny, rainy, winter, midnight, festival, wedding, interview, thesis. Unlisted scenes (monsoon, autumn, graduation, campfire…) are derived on the spot from four questions — what's the light, what's in the air, what's the soundtrack, what's at stake. Scenes take a mood accent: `/design-scene rainy with a trustworthy accent — focused-work app that handles money`.
+Ten moods and ten scenes ship with full recipes (palette, type, shape, pace, texture, copy voice, litmus test).
+Unlisted moods and scenes are derived on the spot from the levers each skill defines.
+Blends state a dominant: `/design-mood trustworthy with a cozy accent - family budgeting app`.
 
 ### Full design workflow
 ```text
 /design-dna + /design-luxe   the jewelry storefront
   → build the pages
-/a11y                        → luxury that keyboard users can actually use
+/a11y-audit                  → luxury that keyboard users can actually use
 /perf                        → those 900ms image reveals still need 60fps
 ```
 
@@ -132,5 +145,5 @@ Ten scenes ship with full recipes in the same format: sunrise, sunset, sunny, ra
 
 - **Give the skill real input.** `/deep-review` on a 4,000-line diff produces worse results than on a focused branch. Small inputs, sharp outputs.
 - **Chain, don't pile.** Run skills sequentially and let each finish. Asking for "review + readability + security + perf at once" blurs all four procedures.
-- **Push back.** Every skill reports decisions ("deliberately left X"). Disagree? Say so — the report exists for that conversation.
-- **Edit the skills.** Strong opinions are defaults, not law. Your team indents differently, bans a font, wants stricter severity gates? Edit the SKILL.md — it lives on your disk.
+- **Push back.** Every skill reports decisions ("deliberately left X"). Disagree? Say so - the report exists for that conversation.
+- **Edit the skills.** Strong opinions are defaults, not law. Your team bans a font or wants stricter severity gates? Edit the SKILL.md - it lives on your disk.

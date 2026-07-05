@@ -1,103 +1,94 @@
-# Writing skills the Quiver way
+# The Quiver authoring contract
 
-How these skills are built, so you can extend the quiver with your own — for your stack, your team, your conventions.
+Every skill in this repo is built to this contract.
+A skill that misses it gets rewritten or pruned, and a PR that misses it gets rejected.
 
-## Anatomy of a skill
+## The prime virtue: predictability
 
-```text
-~/.claude/skills/
-└── my-skill/
-    ├── SKILL.md          # required: frontmatter + instructions
-    └── reference.md      # optional: heavy detail, loaded only when needed
-```
+A skill exists to make the agent run the same process every time, not to inspire it.
+If two runs of the same skill can follow different procedures, the skill is underspecified.
 
-A minimal working skill:
+## The no-op test
 
-```markdown
----
-name: changelog
-description: Update CHANGELOG.md from recent commits in Keep-a-Changelog format. Use when asked to update the changelog or prepare release notes.
-argument-hint: [version]
----
+Every sentence in a SKILL.md must change what the agent does compared to having no skill loaded.
+Read each sentence and ask: would a competent agent behave differently without it?
+If not, delete it.
+Introductions, restated headings, motivational framing, and "be thorough" all fail the test.
 
-# Changelog update
+## Word budgets
 
-Target version: **$ARGUMENTS** (default: Unreleased section).
+| File | Budget (body, excluding frontmatter) |
+|---|---|
+| Wrapper SKILL.md | up to ~150 words |
+| Core or standalone SKILL.md | up to ~300 words |
+| Reference file | no cap, but it must be loaded conditionally, never always |
 
-1. Read `git log` since the last version tag.
-2. Group changes under Added / Changed / Fixed / Removed.
-3. Write entries as user-visible effects, not commit messages.
-4. Show the diff of CHANGELOG.md before finishing.
-```
+Over budget means the skill is doing too much: move depth down the disclosure ladder or split the skill.
 
-Save it, and `/changelog 2.3.0` works. The folder name is the command name.
+## The disclosure ladder
 
-## Frontmatter that matters
+Rank every piece of content by when the agent needs it:
 
-All fields are optional; these five do nearly all the work (full list in the [official reference](https://code.claude.com/docs/en/skills#frontmatter-reference)):
+1. **Steps** - ordered actions in SKILL.md; the agent always needs these.
+2. **Reference** - lenses, checklists, templates, and recipes in sibling files, linked with an instruction saying when to read them.
+3. **External** - official docs and specs; linked, never pasted.
 
-| Field | What it does | Quiver usage |
+When SKILL.md grows past budget, move content down the ladder.
+
+## Families: core + wrappers
+
+When several skills share a procedure and differ only by domain, the procedure becomes a **core** skill and each domain becomes a thin **wrapper**.
+
+- A core is model-invoked, holds the full loop, and knows nothing about domains.
+- A wrapper is essentially one instruction: run the core with this lens, produce this deliverable.
+  Its lens or checklist lives in a reference file inside the wrapper's folder.
+- A wrapper invokes its core by skill name ("Run an `/auditing` session...").
+  If the core is not installed, the invocation fails visibly; a wrapper must never silently degrade into a vague version of itself.
+
+| Family | Core | Wrappers |
 |---|---|---|
-| `description` | **The trigger.** Claude reads this to decide when to auto-load the skill | Every skill; this field is 80% of skill quality |
-| `argument-hint` | Autocomplete hint for arguments | `[files or directory]` |
-| `disable-model-invocation` | `true` = only you can fire it | `ask-me`, `ship` — timing belongs to the human |
-| `allowed-tools` | Pre-approves specific tools while the skill runs | `ship` pre-approves read-only git commands |
-| `context: fork` | Runs the skill in an isolated subagent | none — Quiver skills want your conversation context |
+| Interviews | `interviewing` | `ask-me`, `design-discussion` |
+| Audits | `auditing` | `security-audit`, `design-audit`, `ux-audit`, `a11y-audit` |
 
-## The five rules Quiver skills follow
+## Naming rules
 
-### 1. The description is a trigger, not a slogan
+- `*-audit` sweeps existing code or UI at codebase scope.
+- Review skills (`deep-review`) judge a diff, branch, or PR before merge.
+- Folder name is the command name: kebab-case, leading word first (`security-audit`, not `audit-security`).
+- Never reuse a name bundled with Claude Code (`code-review`, `review`, `security-review`, `verify`, `simplify`, `init`, `run`, `loop`, `schedule`) or a common third-party skill name (`impeccable`).
 
-Claude sees every skill's description all the time, and the body only after invoking. So the description must answer: *what does it do, and which user phrases should summon it?*
+## Frontmatter rules
 
-```yaml
-# Bad — Claude can't tell when to use it:
-description: Improves your code quality
+- `description` is the trigger: it is the only part of the skill the model sees before invoking.
+  Front-load the leading word ("Audit...", "Interview...", "Explain...").
+  One trigger phrase per distinct situation; collapse synonyms.
+  End with "Use when..." naming the situations in the words a user would say.
+- `disable-model-invocation: true` on any skill whose timing belongs to the human (interviews, commits).
+- `argument-hint` on every user-invoked skill.
 
-# Good — capability + concrete trigger situations:
-description: Make code readable for humans. Improves naming, structure,
-  function shape, and comment quality... Use when code works but is hard
-  to follow, after AI-generated code, or before handing code to a team.
-```
+## Deliverables
 
-Pattern: **what it does** (first sentence, key use case first) + **"Use when…"** (the situations, phrased like users phrase them).
+Every skill ends in a defined deliverable: a report with a stated format, a file at a stated path, or a confirmed decision.
+A skill without a deliverable trails off, and the agent pads the ending with generic summary.
+State the deliverable in the last section of the body.
 
-### 2. One skill, one job
+## Failure modes to prune on sight
 
-If a skill's description needs "and also…", split it. Quiver keeps `deep-review` (bugs) apart from `readable` (humans) apart from `harden` (security) — so the user controls what happens, and each procedure stays sharp. Overlapping skills make Claude's choice ambiguous and the results mushy.
+- **No-op lines**: fail the sentence test above.
+- **Duplication**: the same rule stated in two files; keep one source of truth, usually the core.
+- **Sediment**: instructions added for a one-off situation that never recurs.
+- **Sprawl**: a SKILL.md over budget; push down the ladder or split.
+- **Premature completion**: the agent stops before the deliverable; sharpen the done criteria instead of adding words.
 
-### 3. Give a procedure and a deliverable, not vibes
+## Testing a skill (all four required)
 
-A skill body is standing instructions. The strongest pattern:
+1. **Direct**: `/my-skill arg` runs the full procedure to the deliverable.
+2. **Auto-trigger**: phrase the need the way a user would; the model loads the skill.
+3. **Negative**: phrase a neighboring need; the skill stays quiet.
+4. **Live-fire**: run it on a real codebase and inspect the output; reading the SKILL.md is not acceptance.
 
-- **Iron rule first** — the one constraint that defines the skill ("no optimization without a measurement").
-- **Numbered procedure** — the order of operations, with priorities.
-- **Negative space** — what NOT to do. This is where generic output dies; every Quiver skill has a "Never" or "What NOT to do" section.
-- **Report format** — what the user receives at the end. A skill without a defined deliverable trails off.
+## Repo conventions
 
-Concrete beats abstract everywhere: "letter-spacing +12 to +20%" not "spaced-out text"; "empty, one, many, max" not "edge cases".
-
-### 4. Keep SKILL.md lean; push bulk to reference files
-
-Once invoked, the skill body stays in context for the whole session — every line is a recurring token cost. Quiver targets 60–120 lines of body. Heavy reference material goes in supporting files, linked so Claude knows when to read them:
-
-```markdown
-Full mood recipes in [moods.md](moods.md) — read the entry for the target mood.
-```
-
-`design-mood` is the worked example: a ~50-line SKILL.md routes to a 200-line `moods.md` that only loads when a mood is actually being designed.
-
-### 5. Decide who may fire it
-
-Default: both you and Claude. Add `disable-model-invocation: true` for anything with side effects or human timing (commits, deploys, interviews, messages). Add `user-invocable: false` for pure background knowledge that isn't an action ("how our legacy auth works").
-
-## Test your skill
-
-1. **Direct:** `/my-skill some argument` — does the procedure run end to end?
-2. **Auto-trigger:** phrase a request the way a user naturally would (*"can you tidy this changelog?"*) — does Claude load it? If not, the description is missing those words.
-3. **Negative:** make a request that *shouldn't* trigger it — does it stay quiet? If not, the description is too broad.
-4. Edits to a SKILL.md are picked up live within a session — but an already-invoked skill keeps its loaded content; re-invoke to test changes.
-
-## Contributing to Quiver
-
-A new skill belongs in the quiver if it (a) has one job no existing skill covers, (b) defines its trigger, procedure, negative space, and deliverable, and (c) would be useful across many projects — project-specific procedures belong in that project's own `.claude/skills/`. Match the format of an existing skill and open a PR.
+- Plain dashes only; the em dash is banned in every file.
+- In prose sections of markdown, one sentence per line.
+- Imperative, concrete, no hedging: "cap body line length at 65-75ch", not "keep lines reasonably short".

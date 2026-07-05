@@ -5,13 +5,13 @@
     "email": "brijeshchandrakar@gmail.com"
   },
   "metadata": {
-    "description": "Marketplace for Quiver — a curated quiver of skills for Claude Code."
+    "description": "Marketplace for Quiver - a curated quiver of skills for Claude Code."
   },
   "plugins": [
     {
       "name": "quiver",
       "source": "./",
-      "description": "A curated quiver of skills for Claude Code: requirements interviews, deep code review, human-readability passes, performance tuning, testing, debugging, security hardening, and a full anti-generic design suite.",
+      "description": "A curated quiver of composable skills for Claude Code: interviews (requirements + architecture sparring), audits (security, design, UX, a11y), deep review, debugging, testing, perf, plain-language explanations, and a full anti-generic design suite.",
       "category": "productivity",
       "tags": ["skills", "code-review", "design", "performance", "readability", "testing"]
     }
