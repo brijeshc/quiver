@@ -15,6 +15,19 @@ On each run it:
 
 This makes the workflow safe on every commit: ordinary commits are no-ops, and a release is simply a commit that bumps the version.
 
+### Authentication: Trusted Publishing (OIDC), no stored token
+
+The workflow authenticates with **npm Trusted Publishing over OIDC** - there is **no `NPM_TOKEN` secret** in the repo.
+GitHub Actions mints a short-lived token, scoped to this repository and this workflow, for each run.
+
+Why this is better than a long-lived automation token:
+
+- **Nothing to steal.** There is no publish credential sitting in repo secrets to leak or exfiltrate.
+- **No rotation.** Short-lived tokens expire on their own; you never rotate anything.
+- **Provenance for free.** Publishing with `--provenance` attaches a signed, verifiable link back to the exact commit and workflow run, and npm shows a "Published via GitHub Actions" badge on the package page.
+
+This requires `permissions: id-token: write` in the workflow (already set) and a one-time Trusted Publisher config on npm (below).
+
 ## Cutting a release
 
 1. Bump the version (this also creates a commit and a git tag):
@@ -36,17 +49,22 @@ This makes the workflow safe on every commit: ordinary commits are no-ops, and a
 
 > Keep the version in [`.claude-plugin/plugin.json`](../.claude-plugin/plugin.json) and [`.claude-plugin/marketplace.json`](../.claude-plugin/marketplace.json) in sync with `package.json` so the plugin marketplace and npm report the same version.
 
-## One-time setup: the NPM_TOKEN secret
+## One-time setup: configure the Trusted Publisher on npm
 
-The workflow authenticates to npm with a repository secret named `NPM_TOKEN`.
+Do this once. After it, publishing needs no secret at all.
 
-1. Create an npm **automation** access token (bypasses 2FA, intended for CI):
-   npm website → your avatar → **Access Tokens** → **Generate New Token** → **Automation**.
-   (Or `npm token create --read-only=false` and choose an automation/granular token that can publish `@brijeshc2049/quiver`.)
-2. In GitHub: repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
-   - Name: `NPM_TOKEN`
-   - Value: the token from step 1.
-3. Done. The next version bump pushed to `main` publishes automatically.
+1. Sign in at [npmjs.com](https://www.npmjs.com/) as an account that can publish `@brijeshc2049/quiver`.
+2. Go to the package page → **Settings** tab → **Trusted Publishers** (also called **Publishing access** / **OIDC**).
+3. Add a **GitHub Actions** publisher with:
+   - **Organization or user:** `brijeshc`
+   - **Repository:** `quiver`
+   - **Workflow filename:** `publish.yml`
+   - **Environment:** leave blank (the workflow uses no GitHub Environment)
+4. Save. GitHub Actions runs of `publish.yml` in `brijeshc/quiver` can now publish this package.
+
+There is **no `NPM_TOKEN` secret to create** - if one exists from an earlier setup, you can delete it.
+
+> The very first version of a brand-new package name sometimes must be published once manually (`npm publish --access public`) before a Trusted Publisher can be attached. Since `@brijeshc2049/quiver` already exists on npm, you can attach the Trusted Publisher right away.
 
 ## Manual publish (fallback)
 
@@ -63,4 +81,4 @@ npm publish --access public
 
 - **A brand-new version 404s right after publishing.** npm has a short CDN/replication lag for freshly published versions. Wait a minute and retry; `npm view @brijeshc2049/quiver version` confirms once it has propagated.
 - **The Actions run succeeds but nothing publishes.** The version in `package.json` is already on npm - bump it. The run summary says exactly this.
-- **The publish step fails with 401/403.** The `NPM_TOKEN` secret is missing, expired, or lacks publish rights for the scope. Regenerate an automation token and update the secret.
+- **The publish step fails with 401/403 or "unable to authenticate via OIDC".** The Trusted Publisher on npm doesn't match the run. Confirm the npm config lists org `brijeshc`, repo `quiver`, workflow `publish.yml`, and no environment, and that the workflow keeps `permissions: id-token: write`. Renaming the workflow file or repo breaks the match until you update the npm config.

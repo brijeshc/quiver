@@ -1,10 +1,15 @@
 name: Publish to npm
 
-# Publishes @brijeshc2049/quiver to npm automatically.
-# It runs on every push to main, but only actually publishes when the version
-# in package.json is one that is not already on the registry. That makes the
-# workflow safe to run on every commit: docs-only or code-only commits are
-# no-ops, and a real release is just a version bump in package.json.
+# Publishes @brijeshc2049/quiver to the public npm registry automatically.
+#
+# Auth: npm Trusted Publishing via OIDC - there is NO stored NPM_TOKEN secret.
+# The runner mints a short-lived token bound to this repo + workflow, so nothing
+# publishable can be stolen from repo secrets. Requires a one-time "Trusted
+# Publisher" config on npmjs.com (see docs/RELEASING.md) and `id-token: write`.
+#
+# Trigger: every push to main, but it only publishes when the version in
+# package.json is not already on the registry. Ordinary commits are no-ops;
+# a release is simply a commit that bumps the version.
 
 on:
   push:
@@ -27,6 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write        # required for OIDC Trusted Publishing + provenance
     steps:
       - uses: actions/checkout@v4
 
@@ -34,6 +40,10 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+
+      # Trusted Publishing and --provenance require a recent npm (>= 11.5.1).
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Read package name and version
         id: pkg
@@ -54,16 +64,15 @@ jobs:
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # No NODE_AUTH_TOKEN: auth comes from the OIDC identity via id-token: write.
       - name: Publish
         if: steps.check.outputs.should_publish == 'true'
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance
 
       - name: Summary
         run: |
           if [ "${{ steps.check.outputs.should_publish }}" = "true" ]; then
-            echo "Published ${{ steps.pkg.outputs.name }}@${{ steps.pkg.outputs.version }} to npm." >> "$GITHUB_STEP_SUMMARY"
+            echo "Published ${{ steps.pkg.outputs.name }}@${{ steps.pkg.outputs.version }} to npm (with provenance)." >> "$GITHUB_STEP_SUMMARY"
           else
             echo "No publish: ${{ steps.pkg.outputs.name }}@${{ steps.pkg.outputs.version }} is already on npm. Bump the version in package.json to release." >> "$GITHUB_STEP_SUMMARY"
           fi
