@@ -30,10 +30,14 @@ Quiver fixes all three:
 **Option A - npm (one cross-platform command):**
 
 ```bash
-npx @brijeshc2049/quiver install          # all skills -> ~/.claude/skills
-npx @brijeshc2049/quiver install --project # -> ./.claude/skills (share with your team)
+npx @brijeshc2049/quiver install          # all skills -> ~/.claude/skills  (GLOBAL, the default)
+npx @brijeshc2049/quiver install --project # -> ./.claude/skills  (this repo only, share via git)
 npx @brijeshc2049/quiver install ask-me deep-review   # just a few; required cores are pulled in
 ```
+
+> **Global is the default.** Plain `install` places skills in `~/.claude/skills`, where **every** project sees them. Only `--project` scopes them to the current repo. If skills seem to only appear in one project, you ran it with `--project` - re-run without that flag.
+>
+> **`npm install` is not the same as `quiver install`.** Running `npm install @brijeshc2049/quiver` only downloads the package into a local `node_modules/` - Claude Code does **not** read skills from there. You must run the **`quiver install` command** (via `npx`, as above) to copy the skill folders into `~/.claude/skills`. Using `npx` handles both steps for you and leaves nothing behind.
 
 **Option B - plugin marketplace (native, versioned, no file copying):**
 
@@ -150,6 +154,7 @@ More chains in **[docs/USAGE.md](docs/USAGE.md)**.
 | [docs/USAGE.md](docs/USAGE.md) | Which skill when, chaining recipes, design-suite decision guide |
 | [docs/WRITING-SKILLS.md](docs/WRITING-SKILLS.md) | The authoring contract every Quiver skill is built to - write your own to the same bar |
 | [docs/TESTING.md](docs/TESTING.md) | The live-fire test log: how each skill is verified, with results |
+| [docs/RELEASING.md](docs/RELEASING.md) | How npm publishing is automated (GitHub Actions), and how to cut a release |
 
 ## FAQ
 

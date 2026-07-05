@@ -20,11 +20,23 @@ One cross-platform command, no `git clone`, no OS-specific copy syntax.
 Requires Node.js 16.7+.
 
 ```bash
-npx @brijeshc2049/quiver install            # all skills -> ~/.claude/skills
-npx @brijeshc2049/quiver install --project  # all skills -> ./.claude/skills (commit with your repo)
+npx @brijeshc2049/quiver install            # all skills -> ~/.claude/skills  (GLOBAL, the default)
+npx @brijeshc2049/quiver install --project  # all skills -> ./.claude/skills  (this repo only, commit it)
 ```
 
-The CLI copies skill folders into your Claude Code skills directory (Claude Code reads skills from there, not from `node_modules`).
+**Global vs. project - what actually happens:**
+
+| You run… | Skills land in | Visible in |
+|---|---|---|
+| `npx @brijeshc2049/quiver install` | `~/.claude/skills` (`%USERPROFILE%\.claude\skills` on Windows) | **every** project |
+| `npx @brijeshc2049/quiver install --project` | `./.claude/skills` under the current directory | that one repo (and teammates, if committed) |
+
+Global is the default - you do **not** pass a flag to install globally. If skills only show up in a single project, you ran it with `--project`; re-run without that flag.
+
+**`npm install` ≠ `quiver install`.**
+Running `npm install @brijeshc2049/quiver` only downloads the package into a local `node_modules/`, and Claude Code does **not** read skills from `node_modules`.
+The step that actually places skills is the **`quiver install` command**, which copies the skill folders into your Claude Code skills directory.
+Running it through `npx` (as above) does both - fetch and place - and leaves no global npm install behind.
 
 **Only want some skills?** Name them; required cores are pulled in automatically, so you never end up with a wrapper missing its core:
 
@@ -49,6 +61,8 @@ Re-run the same command; existing skill folders are replaced with the current ve
 ```bash
 npx @brijeshc2049/quiver@latest install
 ```
+
+> Maintainer note: new versions are published to npm automatically by GitHub Actions on a version bump - see [docs/RELEASING.md](RELEASING.md).
 
 ### Uninstall
 
